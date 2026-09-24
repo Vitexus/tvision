@@ -1,0 +1,7 @@
+tvision (0.1.0-1) unstable; urgency=medium
+
+  * Initial release, packaged as libtvision-dev: static library, public
+    headers, CMake package config, and pkg-config metadata for use as a
+    build dependency by other projects.
+
+ -- Vítězslav Dvořák <info@vitexsoftware.cz>  Thu, 24 Sep 2026 09:36:25 +0200

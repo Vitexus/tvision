@@ -1,0 +1,10 @@
+prefix=@CMAKE_INSTALL_PREFIX@
+exec_prefix=${prefix}
+libdir=${prefix}/@CMAKE_INSTALL_LIBDIR@
+includedir=${prefix}/@CMAKE_INSTALL_INCLUDEDIR@
+
+Name: tvision
+Description: Turbo Vision text-mode UI framework
+Version: @PROJECT_VERSION@
+Libs: -L${libdir} -ltvision @TV_PC_PRIVATE_LIBS@
+Cflags: -I${includedir}

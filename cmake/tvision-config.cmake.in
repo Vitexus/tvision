@@ -1,0 +1,11 @@
+@PACKAGE_INIT@
+
+include(CMakeFindDependencyMacro)
+
+if (NOT WIN32)
+    find_dependency(Curses)
+endif()
+
+include("${CMAKE_CURRENT_LIST_DIR}/tvision-targets.cmake")
+
+check_required_components(tvision)

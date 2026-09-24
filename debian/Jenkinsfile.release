@@ -1,0 +1,126 @@
+#!groovy
+
+// Triggered by a git tag push. Builds and publishes a release .deb for each
+// supported distribution. The package version is taken directly from the tag
+// (e.g. tag "v0.2.0" -> version "0.2.0~bookworm"), so the changelog must
+// already carry a matching version before tagging.
+
+String[] distributions = [
+    'debian:bookworm',
+    'debian:trixie',
+    // 'debian:forky', // Disabled: not yet supported across the build matrix.
+    'ubuntu:jammy',
+    'ubuntu:noble',
+    'ubuntu:resolute',
+]
+
+String vendor = 'vitexsoftware'
+
+properties([
+    copyArtifactPermission('*'),
+    buildBlocker(
+        useBuildBlocker: true,
+        blockLevel: 'GLOBAL',
+        scanQueueFor: 'ALL',
+        blockingJobs: '♻  repo.mutiflexi.eu'
+    )
+])
+
+node() {
+    ansiColor('xterm') {
+        stage('SCM Checkout') {
+            checkout scm
+        }
+    }
+}
+
+def branches = [:]
+
+distributions.each { distro ->
+    branches[distro] = {
+        def dist       = distro.split(':')
+        def distroCode = dist[1]
+        def buildImage = ''
+        def artifacts  = []
+        def releaseVer = ''
+
+        node {
+            ansiColor('xterm') {
+                stage('Checkout ' + distro) {
+                    checkout scm
+                    buildImage = docker.image(vendor + '/' + distro)
+
+                    // Derive version from the git tag; strip leading 'v' if present.
+                    def rawTag = sh(
+                        script: 'git describe --tags --exact-match 2>/dev/null || echo ""',
+                        returnStdout: true
+                    ).trim()
+                    if (!rawTag) {
+                        error "This pipeline must be triggered by a git tag. No exact tag found on HEAD."
+                    }
+                    def tagVersion = rawTag.replaceFirst(/^v/, '')
+                    if (!(tagVersion ==~ /^[0-9]+(\.[0-9]+){1,3}([~+.-][A-Za-z0-9.]+)*$/)) {
+                        error "Refusing to build: tag ${rawTag} is not a valid version string"
+                    }
+                    releaseVer = tagVersion + '~' + distroCode
+                }
+                stage('Build ' + distro) {
+                    buildImage.inside {
+                        def uniqueBuildId = env.BUILD_NUMBER + '-' + distroCode + '-' + env.EXECUTOR_NUMBER
+                        sh '''
+                            export DH_INTERNAL_BUILDDIR="/tmp/debhelper-build-''' + uniqueBuildId + '''"
+                            export TMPDIR="/tmp/build-''' + uniqueBuildId + '''"
+                            mkdir -p "$DH_INTERNAL_BUILDDIR" "$TMPDIR"
+                        '''
+                        withEnv(["RELEASE_VER=${releaseVer}"]) {
+                            sh 'dch -b -v "$RELEASE_VER" "Release $RELEASE_VER"'
+                        }
+                        sh 'sudo apt-get update --allow-releaseinfo-change'
+                        sh 'sudo chown jenkins:jenkins ..'
+                        def pkgSource = sh(script: 'dpkg-parsechangelog --show-field Source', returnStdout: true).trim()
+                        assert pkgSource ==~ /^[a-z0-9][a-z0-9+\-.]+$/ : "Unexpected Source name: ${pkgSource}"
+                        sh "sudo rm -rf 'debian/${pkgSource}/' debian/.debhelper/ debian/tmp/"
+                        sh '''
+                            export DH_INTERNAL_BUILDDIR="/tmp/debhelper-build-''' + uniqueBuildId + '''"
+                            export TMPDIR="/tmp/build-''' + uniqueBuildId + '''"
+                            debuild-pbuilder -r"sudo -E" -i -us -uc -b
+                        '''
+                        sh 'mkdir -p $WORKSPACE/dist/debian/ ; rm -rf $WORKSPACE/dist/debian/* ; for deb in $(cat debian/files | awk \'{print $1}\'); do mv "../$deb" $WORKSPACE/dist/debian/; done'
+                        artifacts = sh (
+                            script: "cat debian/files | awk '{print \$1}'",
+                            returnStdout: true
+                        ).trim().split('\n')
+                    }
+                }
+                stage('Archive artifacts ' + distro) {
+                    buildImage.inside {
+                        archiveArtifacts artifacts: 'dist/debian/*.deb', allowEmptyArchive: false
+
+                        def uniqueBuildId = env.BUILD_NUMBER + '-' + distroCode + '-' + env.EXECUTOR_NUMBER
+                        sh '''
+                            set -e
+                            if [ -f debian/files ]; then
+                              while read -r file _; do
+                                [ -n "$file" ] || continue
+                                rm -f "dist/debian/$file" || true
+                                rm -f "../$file" || true
+                                rm -f "$WORKSPACE/$file" || true
+                              done < debian/files
+                            fi
+                            rm -rf "/tmp/debhelper-build-''' + uniqueBuildId + '''" || true
+                            rm -rf "/tmp/build-''' + uniqueBuildId + '''" || true
+                        '''
+                    }
+                }
+            }
+        }
+    }
+}
+
+parallel branches
+
+node {
+    stage('Publish to Aptly') {
+	publishDebToAptly()
+    }
+}

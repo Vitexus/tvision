@@ -13,6 +13,10 @@
 !test/**/
 !.github/
 !.github/**/
+!debian/
+!debian/**
+!cmake/
+!cmake/**
 
 !*.*
 *~/
@@ -60,3 +64,14 @@ CMakeScripts
 Makefile
 cmake_install.cmake
 compile_commands.json
+
+# debhelper build byproducts (dpkg-buildpackage run in-tree)
+debian/.debhelper/
+debian/tmp/
+debian/files
+debian/*.substvars
+debian/*.debhelper.log
+debian/debhelper-build-stamp
+debian/libtvision-dev/
+debian/tvision-demo/
+debian/*-dbgsym/

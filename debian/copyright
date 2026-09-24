@@ -1,0 +1,506 @@
+Format: https://www.debian.org/doc/packaging-manuals/copyright-format/1.0/
+Upstream-Name: tvision
+Upstream-Contact: Vítězslav Dvořák <info@vitexsoftware.cz>
+Source: https://github.com/Vitexus/tvision
+
+Files:     examples/palette/palette.h
+           examples/tvdemo/ascii.cpp
+           examples/tvdemo/ascii.h
+           examples/tvdemo/calc.cpp
+           examples/tvdemo/calc.h
+           examples/tvdemo/calendar.cpp
+           examples/tvdemo/calendar.h
+           examples/tvdemo/fileview.cpp
+           examples/tvdemo/fileview.h
+           examples/tvdemo/gadgets.cpp
+           examples/tvdemo/gadgets.h
+           examples/tvdemo/mousedlg.cpp
+           examples/tvdemo/mousedlg.h
+           examples/tvdemo/puzzle.cpp
+           examples/tvdemo/puzzle.h
+           examples/tvdemo/tvcmds.h
+           examples/tvdemo/tvdemo.h
+           examples/tvdemo/tvdemo1.cpp
+           examples/tvdemo/tvdemo2.cpp
+           examples/tvdemo/tvdemo3.cpp
+           examples/tvdir/tvdir.cpp
+           examples/tvedit/tvedit1.cpp
+           examples/tvedit/tvedit2.cpp
+           examples/tvedit/tvedit3.cpp
+           examples/tvforms/datacoll.cpp
+           examples/tvforms/datacoll.h
+           examples/tvforms/fields.cpp
+           examples/tvforms/fields.h
+           examples/tvforms/formcmds.h
+           examples/tvforms/forms.cpp
+           examples/tvforms/forms.h
+           examples/tvforms/genform.cpp
+           examples/tvforms/listdlg.cpp
+           examples/tvforms/listdlg.h
+           examples/tvforms/tvforms.cpp
+           hello.cpp
+           include/tvision/app.h
+           include/tvision/buffers.h
+           include/tvision/colorsel.h
+           include/tvision/compat/borland/_defs.h
+           include/tvision/compat/borland/_null.h
+           include/tvision/compat/borland/dir.h
+           include/tvision/compat/borland/dos.h
+           include/tvision/config.h
+           include/tvision/dialogs.h
+           include/tvision/drawbuf.h
+           include/tvision/editors.h
+           include/tvision/hardware.h
+           include/tvision/help.h
+           include/tvision/helpbase.h
+           include/tvision/menus.h
+           include/tvision/msgbox.h
+           include/tvision/objects.h
+           include/tvision/outline.h
+           include/tvision/resource.h
+           include/tvision/stddlg.h
+           include/tvision/system.h
+           include/tvision/textview.h
+           include/tvision/tkeys.h
+           include/tvision/tobjstrm.h
+           include/tvision/ttypes.h
+           include/tvision/tv.h
+           include/tvision/tvobjs.h
+           include/tvision/util.h
+           include/tvision/validate.h
+           include/tvision/views.h
+           source/platform/strings.cpp
+           source/platform/ttext.cpp
+           source/tvision/colorsel.cpp
+           source/tvision/drivers.cpp
+           source/tvision/drivers2.cpp
+           source/tvision/edits.asm
+           source/tvision/edits.cpp
+           source/tvision/editstat.cpp
+           source/tvision/framelin.asm
+           source/tvision/framelin.cpp
+           source/tvision/geninc.cpp
+           source/tvision/grp.cpp
+           source/tvision/hardware.asm
+           source/tvision/hardwrvr.cpp
+           source/tvision/help.cpp
+           source/tvision/helpbase.cpp
+           source/tvision/histlist.cpp
+           source/tvision/mapcolor.cpp
+           source/tvision/menu.cpp
+           source/tvision/misc.cpp
+           source/tvision/msgbox.cpp
+           source/tvision/new.cpp
+           source/tvision/newstr.cpp
+           source/tvision/nmbkgrnd.cpp
+           source/tvision/nmbutton.cpp
+           source/tvision/nmchdrdl.cpp
+           source/tvision/nmchkbox.cpp
+           source/tvision/nmclrsel.cpp
+           source/tvision/nmclustr.cpp
+           source/tvision/nmcollct.cpp
+           source/tvision/nmdialog.cpp
+           source/tvision/nmdirbox.cpp
+           source/tvision/nmdircol.cpp
+           source/tvision/nmdsktop.cpp
+           source/tvision/nmeditor.cpp
+           source/tvision/nmfilcol.cpp
+           source/tvision/nmfildlg.cpp
+           source/tvision/nmfillst.cpp
+           source/tvision/nmframe.cpp
+           source/tvision/nmgroup.cpp
+           source/tvision/nmhist.cpp
+           source/tvision/nminptln.cpp
+           source/tvision/nmlabel.cpp
+           source/tvision/nmlstbox.cpp
+           source/tvision/nmlstvwr.cpp
+           source/tvision/nmmnubar.cpp
+           source/tvision/nmmnubox.cpp
+           source/tvision/nmmnupop.cpp
+           source/tvision/nmmnuvw.cpp
+           source/tvision/nmmulchk.cpp
+           source/tvision/nmoutlin.cpp
+           source/tvision/nmprmtxt.cpp
+           source/tvision/nmrbtns.cpp
+           source/tvision/nmrescol.cpp
+           source/tvision/nmscoll.cpp
+           source/tvision/nmscrbar.cpp
+           source/tvision/nmscroll.cpp
+           source/tvision/nmstctxt.cpp
+           source/tvision/nmstddlg.cpp
+           source/tvision/nmstline.cpp
+           source/tvision/nmstrcol.cpp
+           source/tvision/nmstrlst.cpp
+           source/tvision/nmvalida.cpp
+           source/tvision/nmview.cpp
+           source/tvision/nmwindow.cpp
+           source/tvision/palette.cpp
+           source/tvision/sbkgrnd.cpp
+           source/tvision/sbutton.cpp
+           source/tvision/schdrdlg.cpp
+           source/tvision/scheckbo.cpp
+           source/tvision/sclrsel.cpp
+           source/tvision/scluster.cpp
+           source/tvision/sdesktop.cpp
+           source/tvision/sdialog.cpp
+           source/tvision/sdircoll.cpp
+           source/tvision/sdirlist.cpp
+           source/tvision/seditors.cpp
+           source/tvision/sfilcoll.cpp
+           source/tvision/sfildlg.cpp
+           source/tvision/sfilelst.cpp
+           source/tvision/sfinfpne.cpp
+           source/tvision/sfinputl.cpp
+           source/tvision/sframe.cpp
+           source/tvision/sgroup.cpp
+           source/tvision/shistory.cpp
+           source/tvision/sinputli.cpp
+           source/tvision/slabel.cpp
+           source/tvision/slistbox.cpp
+           source/tvision/slstview.cpp
+           source/tvision/smenubar.cpp
+           source/tvision/smenubox.cpp
+           source/tvision/smenupop.cpp
+           source/tvision/smnuview.cpp
+           source/tvision/smulchkb.cpp
+           source/tvision/soutline.cpp
+           source/tvision/sparamte.cpp
+           source/tvision/sradiobu.cpp
+           source/tvision/srescoll.cpp
+           source/tvision/sscrlbar.cpp
+           source/tvision/sscrolle.cpp
+           source/tvision/sstatict.cpp
+           source/tvision/sstatusl.cpp
+           source/tvision/sstrcoll.cpp
+           source/tvision/sstrlst.cpp
+           source/tvision/stddlg.cpp
+           source/tvision/strmstat.cpp
+           source/tvision/svalid.cpp
+           source/tvision/sview.cpp
+           source/tvision/swapst.asm
+           source/tvision/swindow.cpp
+           source/tvision/syserr.cpp
+           source/tvision/sysint.asm
+           source/tvision/tapplica.cpp
+           source/tvision/tbkgrnd.cpp
+           source/tvision/tbutton.cpp
+           source/tvision/tchdrdlg.cpp
+           source/tvision/tcheckbo.cpp
+           source/tvision/tcluster.cpp
+           source/tvision/tcmdset.cpp
+           source/tvision/tcollect.cpp
+           source/tvision/tdesktop.cpp
+           source/tvision/tdialog.cpp
+           source/tvision/tdircoll.cpp
+           source/tvision/tdirlist.cpp
+           source/tvision/teditor1.cpp
+           source/tvision/teditor2.cpp
+           source/tvision/teditwnd.cpp
+           source/tvision/tevent.cpp
+           source/tvision/textview.cpp
+           source/tvision/tfildlg.cpp
+           source/tvision/tfilecol.cpp
+           source/tvision/tfiledtr.cpp
+           source/tvision/tfillist.cpp
+           source/tvision/tframe.cpp
+           source/tvision/tgrmv.asm
+           source/tvision/tgrmv.cpp
+           source/tvision/tgroup.cpp
+           source/tvision/thistory.cpp
+           source/tvision/thistwin.cpp
+           source/tvision/thstview.cpp
+           source/tvision/tindictr.cpp
+           source/tvision/tinputli.cpp
+           source/tvision/tlabel.cpp
+           source/tvision/tlistbox.cpp
+           source/tvision/tlstview.cpp
+           source/tvision/tmemo.cpp
+           source/tvision/tmenubar.cpp
+           source/tvision/tmenubox.cpp
+           source/tvision/tmenupop.cpp
+           source/tvision/tmnuview.cpp
+           source/tvision/tmouse.cpp
+           source/tvision/tmulchkb.cpp
+           source/tvision/tobject.cpp
+           source/tvision/tobjstrm.cpp
+           source/tvision/toutline.cpp
+           source/tvision/tparamte.cpp
+           source/tvision/tprogram.cpp
+           source/tvision/tradiobu.cpp
+           source/tvision/trescoll.cpp
+           source/tvision/tresfile.cpp
+           source/tvision/tscreen.cpp
+           source/tvision/tscrlbar.cpp
+           source/tvision/tscrolle.cpp
+           source/tvision/tsortcol.cpp
+           source/tvision/tstatict.cpp
+           source/tvision/tstatusl.cpp
+           source/tvision/tstrcoll.cpp
+           source/tvision/tstrlist.cpp
+           source/tvision/ttprvlns.asm
+           source/tvision/ttprvlns.cpp
+           source/tvision/tv.inc
+           source/tvision/tvalidat.cpp
+           source/tvision/tvcursor.asm
+           source/tvision/tvcursor.cpp
+           source/tvision/tvexposd.asm
+           source/tvision/tvexposd.cpp
+           source/tvision/tview.cpp
+           source/tvision/tvtext1.cpp
+           source/tvision/tvtext2.cpp
+           source/tvision/tvwrite.asm
+           source/tvision/tvwrite.cpp
+           source/tvision/twindow.cpp
+Copyright: 1987-1994 Borland International
+           1991 Borland International,
+           2008-2010 Bjoern Hoehrmann <bjoern@hoehrmann.de> See http://bjoern.hoehrmann.de/utf-8/decoder/dfa/ for details.
+           2014-2016 Milo Yip (https://github.com/miloyip/itoa-benchmark)
+License:   __NO_LICENSE__
+
+Files:     .github/workflows/cmake.yml
+           .gitignore
+           CMakeLists.txt
+           README.md
+           examples/CMakeLists.txt
+           examples/avscolor/CMakeLists.txt
+           examples/avscolor/termcolor.avs
+           examples/avscolor/termcolor.cpp
+           examples/avscolor/termcolor.png
+           examples/mmenu/CMakeLists.txt
+           examples/mmenu/cmds.h
+           examples/mmenu/mmenu.cpp
+           examples/mmenu/mmenu.h
+           examples/mmenu/test.cpp
+           examples/palette/CMakeLists.txt
+           examples/palette/README.md
+           examples/palette/cmds.h
+           examples/palette/palette.cpp
+           examples/palette/test.cpp
+           examples/palette/test.h
+           examples/tvdemo/CMakeLists.txt
+           examples/tvdemo/backgrnd.cpp
+           examples/tvdemo/backgrnd.h
+           examples/tvdemo/demohelp.h
+           examples/tvdemo/demohelp.h16
+           examples/tvdemo/demohelp.h32
+           examples/tvdemo/evntview.cpp
+           examples/tvdemo/evntview.h
+           examples/tvdemo/makefile
+           examples/tvdemo/tvdemo.ide
+           examples/tvdir/CMakeLists.txt
+           examples/tvdir/makefile
+           examples/tvedit/CMakeLists.txt
+           examples/tvedit/makefile
+           examples/tvedit/tvedit.ide
+           examples/tvforms/CMakeLists.txt
+           examples/tvforms/genforms.mak
+           examples/tvforms/makefile
+           examples/tvforms/tvforms.ide
+           examples/tvhc/.gitattributes
+           examples/tvhc/CMakeLists.txt
+           examples/tvhc/demohelp.txt
+           examples/tvhc/makefile
+           examples/tvhc/tvhc.cpp
+           examples/tvhc/tvhc.h
+           include/pch.h
+           include/tvision/colors.h
+           include/tvision/compat/borland/alloc.h
+           include/tvision/compat/borland/fstream.h
+           include/tvision/compat/borland/io.h
+           include/tvision/compat/borland/iomanip.h
+           include/tvision/compat/borland/iosfwd.h
+           include/tvision/compat/borland/iostream.h
+           include/tvision/compat/borland/mem.h
+           include/tvision/compat/borland/strstrea.h
+           include/tvision/compat/malloc/malloc.h
+           include/tvision/compat/windows/windows.h
+           include/tvision/internal/ansiwrit.h
+           include/tvision/internal/base64.h
+           include/tvision/internal/codepage.h
+           include/tvision/internal/conctl.h
+           include/tvision/internal/constarr.h
+           include/tvision/internal/constmap.h
+           include/tvision/internal/dispbuff.h
+           include/tvision/internal/endian.h
+           include/tvision/internal/errredir.h
+           include/tvision/internal/events.h
+           include/tvision/internal/far2l.h
+           include/tvision/internal/findfrst.h
+           include/tvision/internal/getenv.h
+           include/tvision/internal/gpminput.h
+           include/tvision/internal/linuxcon.h
+           include/tvision/internal/mutex.h
+           include/tvision/internal/ncurdisp.h
+           include/tvision/internal/ncursinp.h
+           include/tvision/internal/pathconv.h
+           include/tvision/internal/platform.h
+           include/tvision/internal/sighandl.h
+           include/tvision/internal/sigwinch.h
+           include/tvision/internal/strings.h
+           include/tvision/internal/termio.h
+           include/tvision/internal/unixclip.h
+           include/tvision/internal/unixcon.h
+           include/tvision/internal/utf8.h
+           include/tvision/internal/win32con.h
+           include/tvision/internal/winwidth.h
+           include/tvision/scrncell.h
+           include/tvision/surface.h
+           include/tvision/tspan.h
+           include/tvision/tstrview.h
+           include/tvision/ttext.h
+           project/makefile
+           source/CMakeLists.txt
+           source/platform/ansiwrit.cpp
+           source/platform/base64.cpp
+           source/platform/codepage.cpp
+           source/platform/colors.cpp
+           source/platform/conctl.cpp
+           source/platform/dir.cpp
+           source/platform/dispbuff.cpp
+           source/platform/errredir.cpp
+           source/platform/events.cpp
+           source/platform/far2l.cpp
+           source/platform/findfrst.cpp
+           source/platform/gpminput.cpp
+           source/platform/hardware.cpp
+           source/platform/linuxcon.cpp
+           source/platform/mutex.cpp
+           source/platform/ncurdisp.cpp
+           source/platform/ncursinp.cpp
+           source/platform/platfchr.cpp
+           source/platform/platform.cpp
+           source/platform/sighandl.cpp
+           source/platform/sigwinch.cpp
+           source/platform/termio.cpp
+           source/platform/unixclip.cpp
+           source/platform/unixcon.cpp
+           source/platform/utf8.cpp
+           source/platform/win32con.cpp
+           source/platform/winwidth.cpp
+           source/tvision/fmtstr.cpp
+           source/tvision/makefile
+           source/tvision/popupmnu.cpp
+           source/tvision/prntcnst.cpp
+           source/tvision/snprintf.cpp
+           source/tvision/tclipbrd.cpp
+           source/tvision/tkey.cpp
+           source/tvision/tstrview.cpp
+           source/tvision/tsurface.cpp
+           source/tvision/ttimerqu.cpp
+           test/CMakeLists.txt
+           test/platform/base64.test.cpp
+           test/platform/colors.test.cpp
+           test/platform/dispbuff.test.cpp
+           test/platform/endian.test.cpp
+           test/platform/far2l.test.cpp
+           test/platform/scrncell.test.cpp
+           test/platform/sighandl.test.cpp
+           test/platform/termio.test.cpp
+           test/platform/termio.test.h
+           test/platform/ttext.test.cpp
+           test/platform/utf8.test.cpp
+           test/test.h
+           test/test_charops.cpp
+           test/test_charops.h
+           test/test_group.h
+           test/test_operators.h
+           test/tvision/teditor.test.cpp
+           test/tvision/textview.test.cpp
+           test/tvision/tkey.test.cpp
+           test/tvision/tmnuview.test.cpp
+           test/tvision/ttimerqu.test.cpp
+Copyright: __NO_COPYRIGHT_NOR_LICENSE__
+License:   __NO_COPYRIGHT_NOR_LICENSE__
+
+Files:     examples/tvforms/genparts.h
+           examples/tvforms/genphone.h
+Copyright: 1994 Borland International
+License:   __UNKNOWN__
+ Use GENFORMS.MAK to generate data files for TVFORMS demo
+ (this file is used in GENFORM.CPP).
+
+Files:     COPYRIGHT
+Copyright: 2008-2010 Bjoern Hoehrmann <bjoern@hoehrmann.de> See http://bjoern.hoehrmann.de/utf-8/decoder/dfa/ for details.
+           2014 Milo Yip
+           2019-2025 magiblot <magiblot@hotmail.com>
+License:   Expat
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
+ .
+ The above copyright notice and this permission notice shall be included in
+ all copies or substantial portions of the Software.
+ .
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
+ SOFTWARE.
+ .
+ Below are the copyright notices of third-party components included in this
+ project.
+ .
+ ## Fast utoa()
+ ## https://github.com/miloyip/itoa-benchmark
+ .
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
+ .
+ The above copyright notice and this permission notice shall be included in
+ all copies or substantial portions of the Software.
+ .
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ THE SOFTWARE.
+ .
+ ## wcwidth() for Unicode 5.0
+ ## https://www.cl.cam.ac.uk/~mgk25/ucs/wcwidth.c
+ .
+ Markus Kuhn -- 2007-05-26 (Unicode 5.0)
+ .
+ Permission to use, copy, modify, and distribute this software
+ for any purpose and without fee is hereby granted. The author
+ disclaims all warranties with regard to this software.
+ .
+ ## Flexible and Economical UTF-8 Decoder
+ ## http://bjoern.hoehrmann.de/utf-8/decoder/dfa/
+ .
+ Permission is hereby granted, free of charge, to any person obtaining a copy
+ of this software and associated documentation files (the "Software"), to deal
+ in the Software without restriction, including without limitation the rights
+ to use, copy, modify, merge, publish, distribute, sublicense, and/or sell
+ copies of the Software, and to permit persons to whom the Software is
+ furnished to do so, subject to the following conditions:
+ .
+ The above copyright notice and this permission notice shall be included in
+ all copies or substantial portions of the Software.
+ .
+ THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+ IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+ FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+ AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
+ LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
+ OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
+ THE SOFTWARE.
+
+Files:     examples/tvedit/tvedit.h
+Copyright: 1991 Borland International
+License:   __UNKNOWN__
+ Turbo Vision TVEDIT header file
+
+#----------------------------------------------------------------------------
+# Files marked as NO_LICENSE_TEXT_FOUND may be covered by the following
+# license/copyright files.

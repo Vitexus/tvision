@@ -44,7 +44,7 @@ function(tv_message_mp)
     endif()
 endfunction()
 
-project(tvision)
+project(tvision VERSION 0.1.0 LANGUAGES CXX)
 
 # Project options
 

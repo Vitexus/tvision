@@ -88,6 +88,8 @@ endif()
 
 # Dependencies
 
+set(TV_PC_PRIVATE_LIBS "")
+
 if (NOT WIN32)
     # ncursesw
     find_library(NCURSESW ncursesw)
@@ -115,6 +117,7 @@ if (NOT WIN32)
 
     target_compile_definitions(${PROJECT_NAME} PRIVATE HAVE_NCURSES)
     target_link_libraries(${PROJECT_NAME} PUBLIC ${NCURSESW})
+    list(APPEND TV_PC_PRIVATE_LIBS "-lncursesw")
 
     # tinfow, dependency of ncurses. Often provided as 'tinfo', but we also need
     # to link the 'w' version when both are available.
@@ -125,6 +128,9 @@ if (NOT WIN32)
     if (TINFOW)
         tv_message(STATUS "Found 'tinfow': ${TINFOW}")
         target_link_libraries(${PROJECT_NAME} PUBLIC ${TINFOW})
+        get_filename_component(TINFOW_NAME "${TINFOW}" NAME_WE)
+        string(REGEX REPLACE "^lib" "" TINFOW_NAME "${TINFOW_NAME}")
+        list(APPEND TV_PC_PRIVATE_LIBS "-l${TINFOW_NAME}")
     endif()
 
     # gpm
@@ -142,9 +148,12 @@ if (NOT WIN32)
             endif()
             target_compile_definitions(${PROJECT_NAME} PRIVATE HAVE_GPM)
             target_link_libraries(${PROJECT_NAME} PUBLIC ${GPM})
+            list(APPEND TV_PC_PRIVATE_LIBS "-lgpm")
         endif()
     endif()
 endif()
+
+string(REPLACE ";" " " TV_PC_PRIVATE_LIBS "${TV_PC_PRIVATE_LIBS}")
 
 tv_set_output_dir(${PROJECT_NAME})
 
@@ -153,17 +162,51 @@ tv_set_output_dir(${PROJECT_NAME})
 # static lib
 #
 install(TARGETS ${PROJECT_NAME}
-    EXPORT ${PROJECT_NAME}-config
+    EXPORT ${PROJECT_NAME}-targets
     ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}
     COMPONENT library
 )
 
 # package configuration
 
-install(EXPORT ${PROJECT_NAME}-config
+include(CMakePackageConfigHelpers)
+
+install(EXPORT ${PROJECT_NAME}-targets
     DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
     NAMESPACE ${PROJECT_NAME}::
-    FILE ${PROJECT_NAME}-config.cmake
+    FILE ${PROJECT_NAME}-targets.cmake
+    COMPONENT library
+)
+
+configure_package_config_file(
+    "${PROJECT_SOURCE_DIR}/cmake/${PROJECT_NAME}-config.cmake.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config.cmake"
+    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
+)
+
+write_basic_package_version_file(
+    "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config-version.cmake"
+    VERSION ${PROJECT_VERSION}
+    COMPATIBILITY SameMajorVersion
+)
+
+install(FILES
+    "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config.cmake"
+    "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}-config-version.cmake"
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${PROJECT_NAME}
+    COMPONENT library
+)
+
+# pkg-config
+
+configure_file(
+    "${PROJECT_SOURCE_DIR}/cmake/${PROJECT_NAME}.pc.in"
+    "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.pc"
+    @ONLY
+)
+
+install(FILES "${CMAKE_CURRENT_BINARY_DIR}/${PROJECT_NAME}.pc"
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/pkgconfig
     COMPONENT library
 )
 

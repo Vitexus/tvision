@@ -1,0 +1,44 @@
+Source: tvision
+Section: libdevel
+Priority: optional
+Maintainer: Vítězslav Dvořák <info@vitexsoftware.cz>
+Build-Depends:
+ debhelper-compat (= 13),
+ cmake,
+ libncurses-dev,
+ libgpm-dev,
+Standards-Version: 4.7.0
+Homepage: https://github.com/Vitexus/tvision
+Vcs-Git: https://github.com/Vitexus/tvision.git
+Vcs-Browser: https://github.com/Vitexus/tvision
+Rules-Requires-Root: no
+
+Package: libtvision-dev
+Section: libdevel
+Architecture: any
+Multi-Arch: same
+Depends:
+ ${misc:Depends},
+ libncurses-dev,
+ libgpm-dev,
+Description: Turbo Vision text-mode UI framework (development files)
+ Turbo Vision is a framework for text-based user interfaces, providing
+ windows, dialogs, menus, and other widgets for terminal applications.
+ .
+ This package ships the static library, public headers, CMake package
+ configuration, and pkg-config metadata needed to build applications
+ against Turbo Vision.
+
+Package: tvision-demo
+Section: misc
+Architecture: any
+Depends:
+ ${misc:Depends},
+ ${shlibs:Depends},
+Description: Turbo Vision text-mode UI framework (demo applications)
+ Turbo Vision is a framework for text-based user interfaces, providing
+ windows, dialogs, menus, and other widgets for terminal applications.
+ .
+ This package ships example applications built against Turbo Vision
+ (tvedit, tvdemo, tvhc), useful for trying out the framework's widgets
+ without building it from source.

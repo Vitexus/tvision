@@ -1,0 +1,4 @@
+usr/include/tvision
+usr/lib/*/libtvision.a
+usr/lib/*/cmake/tvision
+usr/lib/*/pkgconfig/tvision.pc
