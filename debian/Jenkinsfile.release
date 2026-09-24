@@ -44,7 +44,7 @@ distributions.each { distro ->
         def artifacts  = []
         def releaseVer = ''
 
-        node {
+        node('amd64') {
             ansiColor('xterm') {
                 stage('Checkout ' + distro) {
                     checkout scm
