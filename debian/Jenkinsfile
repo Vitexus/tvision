@@ -2,23 +2,17 @@
 
 // Based on https://github.com/VitexSoftware/BuildImages/blob/main/Test/Jenkinsfile
 
-// architecture -> distributions built on that architecture's nodes.
-// arm64 (Raspberry Pi fleet) only needs trixie for now - built on the
-// arm64-labeled agents. vitexsoftware/<distro> images are multi-arch, so the
-// same image reference resolves to its arm64 manifest when pulled on an
-// arm64 node.
-Map<String, List<String>> archDistributions = [
-    'amd64': [
-        'debian:bookworm',
-        'debian:trixie',
-        // 'debian:forky', // Disabled: not yet supported across the build matrix.
-        'ubuntu:jammy',
-        'ubuntu:noble',
-        'ubuntu:resolute',
-    ],
-    'arm64': [
-        'debian:trixie',
-    ],
+// Every distribution is built for every architecture.
+// vitexsoftware/<distro> images are multi-arch, so the same image reference
+// resolves to the matching per-arch manifest when pulled on that arch's node.
+String[] architectures = ['amd64', 'arm64']
+String[] distributions = [
+    'debian:bookworm',
+    'debian:trixie',
+    // 'debian:forky', // Disabled: not yet supported across the build matrix.
+    'ubuntu:jammy',
+    'ubuntu:noble',
+    'ubuntu:resolute',
 ]
 
 String vendor = 'vitexsoftware'
@@ -42,7 +36,7 @@ node() {
 }
 
 def branches = [:]
-archDistributions.each { arch, distributions ->
+architectures.each { arch ->
     distributions.each { distro ->
         def branchLabel = arch == 'amd64' ? distro : (distro + '-' + arch)
         branches[branchLabel] = {
