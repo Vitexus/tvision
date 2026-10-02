@@ -1,20 +1,12 @@
 #!groovy
 
-// Triggered by a git tag push. Builds and publishes a release .deb for each
-// supported distribution. The package version is taken directly from the tag
-// (e.g. tag "v0.2.0" -> version "0.2.0~bookworm"), so the changelog must
-// already carry a matching version before tagging.
+// MultiFlexi production pipeline: builds on multiflexi-* images and publishes
+// to repo.multiflexi.eu via MultiFlexi-publish. Testing builds use debian/Jenkinsfile.
 
-String[] distributions = [
-    'debian:bookworm',
-    'debian:trixie',
-    // 'debian:forky', // Disabled: not yet supported across the build matrix.
-    'ubuntu:jammy',
-    'ubuntu:noble',
-    'ubuntu:resolute',
-]
+String[] distributions = ['debian:bookworm', 'debian:trixie', 'ubuntu:jammy', 'ubuntu:noble']
 
 String vendor = 'vitexsoftware'
+String imagePrefix = 'multiflexi-'
 
 properties([
     copyArtifactPermission('*'),
@@ -22,73 +14,51 @@ properties([
         useBuildBlocker: true,
         blockLevel: 'GLOBAL',
         scanQueueFor: 'ALL',
-        blockingJobs: '♻  repo.mutiflexi.eu'
+        blockingJobs: '.*repo.mutiflexi.eu'
     )
 ])
-
 node() {
     ansiColor('xterm') {
         stage('SCM Checkout') {
+            sh 'sudo chown -R jenkins:jenkins . || true'
             checkout scm
-            // Checked out once here; every parallel branch below unstashes
-            // this instead of hitting GitHub again, so a wide build matrix
-            // costs one clone instead of one per branch.
-            stash name: 'src', useDefaultExcludes: false
         }
     }
 }
 
 def branches = [:]
-
 distributions.each { distro ->
     branches[distro] = {
-        def dist       = distro.split(':')
+        def distroName = distro
+        println  "Dist:" + distroName
+
+        def dist = distroName.split(':')
         def distroCode = dist[1]
         def buildImage = ''
-        def artifacts  = []
-        def releaseVer = ''
+        def artifacts = []
+        def buildVer = ''
 
-        node('amd64') {
+        node {
             ansiColor('xterm') {
-                stage('Checkout ' + distro) {
-                    unstash 'src'
-                    buildImage = docker.image(vendor + '/' + distro)
-
-                    // Derive version from the git tag; strip leading 'v' if present.
-                    def rawTag = sh(
-                        script: 'git describe --tags --exact-match 2>/dev/null || echo ""',
+                stage('Checkout ' + distroName) {
+                    sh 'sudo chown -R jenkins:jenkins . || true'
+                    checkout scm
+                    def imageName = vendor + '/' + imagePrefix + dist[0] + ':' + distroCode
+                    buildImage = docker.image(imageName)
+                    sh 'git checkout debian/changelog'
+                    def version = sh (
+                        script: 'dpkg-parsechangelog --show-field Version',
                         returnStdout: true
                     ).trim()
-                    if (!rawTag) {
-                        error "This pipeline must be triggered by a git tag. No exact tag found on HEAD."
-                    }
-                    def tagVersion = rawTag.replaceFirst(/^v/, '')
-                    if (!(tagVersion ==~ /^[0-9]+(\.[0-9]+){1,3}([~+.-][A-Za-z0-9.]+)*$/)) {
-                        error "Refusing to build: tag ${rawTag} is not a valid version string"
-                    }
-                    releaseVer = tagVersion + '~' + distroCode
+                    buildVer = version + '.' + env.BUILD_NUMBER  + '~' + distroCode
                 }
-                stage('Build ' + distro) {
-                    buildImage.inside {
-                        def uniqueBuildId = env.BUILD_NUMBER + '-' + distroCode + '-' + env.EXECUTOR_NUMBER
-                        sh '''
-                            export DH_INTERNAL_BUILDDIR="/tmp/debhelper-build-''' + uniqueBuildId + '''"
-                            export TMPDIR="/tmp/build-''' + uniqueBuildId + '''"
-                            mkdir -p "$DH_INTERNAL_BUILDDIR" "$TMPDIR"
-                        '''
-                        withEnv(["RELEASE_VER=${releaseVer}"]) {
-                            sh 'dch -b -v "$RELEASE_VER" "Release $RELEASE_VER"'
-                        }
+                stage('Build ' + distroName) {
+                    buildImage.inside('--init') {
+                        sh 'dch -b -v ' + buildVer  + ' "' + env.BUILD_TAG  + '"'
                         sh 'sudo apt-get update --allow-releaseinfo-change'
-                        sh 'sudo chown jenkins:jenkins ..'
-                        def pkgSource = sh(script: 'dpkg-parsechangelog --show-field Source', returnStdout: true).trim()
-                        assert pkgSource ==~ /^[a-z0-9][a-z0-9+\-.]+$/ : "Unexpected Source name: ${pkgSource}"
-                        sh "sudo rm -rf 'debian/${pkgSource}/' debian/.debhelper/ debian/tmp/"
-                        sh '''
-                            export DH_INTERNAL_BUILDDIR="/tmp/debhelper-build-''' + uniqueBuildId + '''"
-                            export TMPDIR="/tmp/build-''' + uniqueBuildId + '''"
-                            debuild-pbuilder -r"sudo -E" -i -us -uc -b
-                        '''
+                        sh 'sudo chown -R jenkins:jenkins . ..'
+                        sh 'sudo rm -rf debian/$(dpkg-parsechangelog --show-field Source)/ debian/.debhelper/ debian/tmp/'
+                        sh 'debuild-pbuilder -r"sudo -E" -i -us -uc -b'
                         sh 'mkdir -p $WORKSPACE/dist/debian/ ; rm -rf $WORKSPACE/dist/debian/* ; for deb in $(cat debian/files | awk \'{print $1}\'); do mv "../$deb" $WORKSPACE/dist/debian/; done'
                         artifacts = sh (
                             script: "cat debian/files | awk '{print \$1}'",
@@ -96,11 +66,40 @@ distributions.each { distro ->
                         ).trim().split('\n')
                     }
                 }
-                stage('Archive artifacts ' + distro) {
-                    buildImage.inside {
-                        archiveArtifacts artifacts: 'dist/debian/*.deb', allowEmptyArchive: false
 
-                        def uniqueBuildId = env.BUILD_NUMBER + '-' + distroCode + '-' + env.EXECUTOR_NUMBER
+                stage('Test ' + distroName) {
+                    buildImage.inside('--init') {
+                        def debconf_debug = 0
+                        sh 'cd $WORKSPACE/dist/debian/ ; dpkg-scanpackages . /dev/null | gzip -9c > Packages.gz; cd $WORKSPACE'
+                        sh 'echo "deb [trusted=yes] file://///$WORKSPACE/dist/debian/ ./" | sudo tee /etc/apt/sources.list.d/local.list'
+                        sh 'sudo apt-get update --allow-releaseinfo-change'
+                        sh 'echo "INSTALATION"'
+                        def installOrder = ['libtvision-dev', 'tvision-demo']
+                        def sorted = []
+                        installOrder.each { prefix ->
+                            artifacts.each { deb_file ->
+                                if (deb_file.endsWith('.deb') && deb_file.startsWith(prefix)) {
+                                    sorted << deb_file
+                                }
+                            }
+                        }
+                        artifacts.each { deb_file ->
+                            if (deb_file.endsWith('.deb') && !(deb_file in sorted)) {
+                                sorted << deb_file
+                            }
+                        }
+                        sorted.each { deb_file ->
+                            sh 'echo -e "${GREEN} installing ' + deb_file + ' on `lsb_release -sc` ${ENDCOLOR} "'
+                            sh 'sudo DEBIAN_FRONTEND=noninteractive DEBCONF_DEBUG=' + debconf_debug + ' apt-get -y install $WORKSPACE/dist/debian/' + deb_file
+                        }
+                    }
+                }
+                stage('Archive artifacts ' + distroName ) {
+                    buildImage.inside('--init') {
+                        artifacts.each { deb_file ->
+                            println "Archiving artifact: " + deb_file
+                            archiveArtifacts artifacts: 'dist/debian/' + deb_file
+                        }
                         sh '''
                             set -e
                             if [ -f debian/files ]; then
@@ -111,8 +110,6 @@ distributions.each { distro ->
                                 rm -f "$WORKSPACE/$file" || true
                               done < debian/files
                             fi
-                            rm -rf "/tmp/debhelper-build-''' + uniqueBuildId + '''" || true
-                            rm -rf "/tmp/build-''' + uniqueBuildId + '''" || true
                         '''
                     }
                 }
@@ -120,11 +117,17 @@ distributions.each { distro ->
         }
     }
 }
-
 parallel branches
 
-node('aptly') {
-    stage('Publish to Aptly') {
-	publishDebToAptly()
-    }
+if (!currentBuild.result || currentBuild.result == 'SUCCESS') {
+    build job: 'MultiFlexi-publish',
+      wait: false,
+      parameters: [
+        string(name: 'UPSTREAM_JOB', value: env.JOB_NAME),
+        string(name: 'UPSTREAM_BUILD', value: env.BUILD_NUMBER),
+        string(name: 'REMOTE_SSH', value: 'multirepo@repo.multiflexi.eu'),
+        string(name: 'REMOTE_REPO_DIR', value: '/var/lib/multirepo/public/multiflexi'),
+        string(name: 'COMPONENT', value: 'main'),
+        string(name: 'DEB_DIST', value: '')
+      ]
 }
