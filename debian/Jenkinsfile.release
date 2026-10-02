@@ -72,7 +72,9 @@ distributions.each { distro ->
                         def debconf_debug = 0
                         sh 'cd $WORKSPACE/dist/debian/ ; dpkg-scanpackages . /dev/null | gzip -9c > Packages.gz; cd $WORKSPACE'
                         sh 'echo "deb [trusted=yes] file://///$WORKSPACE/dist/debian/ ./" | sudo tee /etc/apt/sources.list.d/local.list'
-                        sh 'sudo apt-get update --allow-releaseinfo-change'
+                        // Multiflexi apt indexes for some Ubuntu suites can 404 mid-rebuild;
+                        // do not fail the install smoke test on that transient error.
+                        sh 'sudo apt-get update --allow-releaseinfo-change || true'
                         sh 'echo "INSTALATION"'
                         def installOrder = ['libtvision-dev', 'tvision-demo']
                         def sorted = []
