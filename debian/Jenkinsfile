@@ -254,7 +254,7 @@ architectures.each { arch ->
                                     withEnv(["BUILDVER=${buildVer}"]) {
                                         sh 'dch -b -v "$BUILDVER" "$BUILD_TAG"'
                                     }
-                                    sh 'sudo apt-get update --allow-releaseinfo-change'
+                                    sh 'sudo apt-get update --allow-releaseinfo-change || true'
                                     sh 'sudo rm -rf debian/$(dpkg-parsechangelog --show-field Source)/ debian/.debhelper/ debian/tmp/'
                                     sh '''
                                         export DH_INTERNAL_BUILDDIR="/tmp/debhelper-build-''' + uniqueBuildId + '''"
