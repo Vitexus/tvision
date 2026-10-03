@@ -3,7 +3,7 @@
 // Based on https://github.com/VitexSoftware/BuildImages/blob/main/Test/Jenkinsfile
 // Multi-arch matrix with node-local build roots (no NFS stash).
 
-String[] architectures = ['amd64', 'arm64']
+String[] architectures = ['arm64'] // focused arm64 publish; restore amd64 after
 String[] distributions = [
     'debian:bookworm',
     'debian:trixie',
